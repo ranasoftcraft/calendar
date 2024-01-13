@@ -1,2 +1,2 @@
 # calender
-Release plan calender
+Release plan calendar

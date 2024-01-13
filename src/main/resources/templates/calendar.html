@@ -1,0 +1,43 @@
+<html>
+<head>
+    <link rel='stylesheet' href='/webjars/fullcalendar/5.10.1/main.css' />
+    <link rel='stylesheet' href="https://fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700" type="text/css">
+    <link rel="stylesheet" href="/static/calendar.css" />
+
+    <script src='/webjars/fullcalendar/5.10.1/main.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarDiv = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarDiv, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'today,timeGridWeek,timeGridDay prev,next',
+                    center: 'title',
+                    right: 'dayGridMonth,listMonth'
+                },
+                buttonText: {
+                    today: 'Today',
+                    timeGridWeek: 'Week',
+                    timeGridDay: 'Today timeline',
+                    month: 'Grid',
+                    list: 'List'
+                },
+                allDayText: '',
+                height: 'auto',
+                dateClick: function(info) {
+                    console.log(info);
+                    window.open(document.location.origin + '/admin/event/add?date='+info.dateStr);
+                }
+            });
+            calendar.addEventSource('/user/release');
+            calendar.render();
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+
+    <div id='calendar'></div>
+</div>
+</body>
+</html>
