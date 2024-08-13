@@ -1,0 +1,7 @@
+git:
+  url: https://api.github.com
+  username: aimhighrana
+  password: "******"
+  ignore-ssl: true
+  token: "*******"
+  owner: ranasoftcraft

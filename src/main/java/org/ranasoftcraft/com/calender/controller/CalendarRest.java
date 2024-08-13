@@ -1,27 +1,30 @@
 package org.ranasoftcraft.com.calender.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.ranasoftcraft.com.calender.dto.CalendarEvents;
 import org.ranasoftcraft.com.calender.entity.Events;
+import org.ranasoftcraft.com.calender.github.reader.MilestonesService;
 import org.ranasoftcraft.com.calender.services.CalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.client.RestClient;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-@Controller
+@Controller @RequiredArgsConstructor
 public class CalendarRest {
 
-    private CalendarService calendarService;
+    private final CalendarService calendarService;
 
-    @Autowired
-    public void setCalendarService(CalendarService calendarService) {
-        this.calendarService = calendarService;
-    }
+    private final MilestonesService milestonesService;
 
 
     @GetMapping("/calendar")
@@ -31,7 +34,7 @@ public class CalendarRest {
 
 
     @GetMapping("/user/release")
-    public ResponseEntity<?> release() {
+    public ResponseEntity<?> release() throws URISyntaxException {
         Page<Events> events = calendarService.getEvents(0L,0L);
         return ResponseEntity.ok(events.get().map(m-> {
             return CalendarEvents.builder()
