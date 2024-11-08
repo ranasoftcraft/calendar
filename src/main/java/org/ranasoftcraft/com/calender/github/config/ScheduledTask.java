@@ -35,8 +35,8 @@ public class ScheduledTask {
     private String owner;
 
 
-    @Scheduled(cron = "0 0 0 * * *")
-//    @Scheduled(cron = "0 * * * * *") // every 1 minutes
+//    @Scheduled(cron = "0 0 0 * * *") // every day
+    @Scheduled(cron = "0 * * * * *") // every 1 minutes
     public void pullReleases() {
         List<Repository> repositories = Collections.emptyList();
         try { repositories =  repositoryService.getRepository(owner);} catch (Exception e) {

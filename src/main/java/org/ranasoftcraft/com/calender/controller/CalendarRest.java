@@ -27,7 +27,7 @@ public class CalendarRest {
     private final MilestonesService milestonesService;
 
 
-    @GetMapping("/calendar")
+    @GetMapping("/")
     public String calendar() {
         return "calendar.html";
     }

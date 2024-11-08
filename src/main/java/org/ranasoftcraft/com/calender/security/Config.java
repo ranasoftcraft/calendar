@@ -30,6 +30,7 @@ public class Config{
         http.authorizeRequests(authorize-> authorize
                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                 .requestMatchers("/login","/calendar","/webjars/**","/static/*","/user/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
 //                .antMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/**").permitAll()
                 .anyRequest().authenticated()
