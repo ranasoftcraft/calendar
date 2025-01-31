@@ -31,6 +31,9 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Build
+          command: mvn -B -DskipTests clean package
+      - run:
           name: Build Docker Image
           command: |
             docker build -t $DOCKERHUB_USERNAME/calendar:latest .
