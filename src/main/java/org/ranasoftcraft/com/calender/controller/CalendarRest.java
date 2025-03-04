@@ -2,6 +2,7 @@ package org.ranasoftcraft.com.calender.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.ranasoftcraft.com.calender.dto.CalendarEvents;
+import org.ranasoftcraft.com.calender.entity.EventComments;
 import org.ranasoftcraft.com.calender.entity.Events;
 import org.ranasoftcraft.com.calender.github.reader.MilestonesService;
 import org.ranasoftcraft.com.calender.services.CalendarService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClient;
 
 import java.net.URI;
@@ -32,18 +34,28 @@ public class CalendarRest {
         return "calendar.html";
     }
 
+    @GetMapping("/issue")
+    public String gitIssueList(@RequestParam String milestone) {
+        return "gitissue-details.html";
+    }
+
 
     @GetMapping("/user/release")
     public ResponseEntity<?> release() throws URISyntaxException {
         Page<Events> events = calendarService.getEvents(0L,0L);
         return ResponseEntity.ok(events.get().map(m-> {
             return CalendarEvents.builder()
-                    .url("null")
+                    .url("/calendar/issue?milestone="+m.getEventId())
                     .title(m.getTitle())
                     .start(new Date(m.getCalendarTimestamp()))
                     .allDay(true)
                     .backgroundColor(m.getColorCode())
                     .build();
         }).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/user/milestone/issues")
+    public ResponseEntity<Page<EventComments>> milestoneIssue(@RequestParam String milestone) throws URISyntaxException {
+        return ResponseEntity.ok(calendarService.getIssues(milestone));
     }
 }

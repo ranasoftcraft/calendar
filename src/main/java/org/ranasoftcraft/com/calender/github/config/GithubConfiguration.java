@@ -1,6 +1,7 @@
 package org.ranasoftcraft.com.calender.github.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.ranasoftcraft.com.calender.github.reader.IssueService;
 import org.ranasoftcraft.com.calender.github.reader.MilestonesService;
 import org.ranasoftcraft.com.calender.github.reader.RepositoryService;
 import org.ranasoftcraft.com.calender.jms.config.JsonMessageConverter;
@@ -55,6 +56,20 @@ public class GithubConfiguration {
                 .builderFor(RestClientAdapter.create(client))
                 .build();
         return factory.createClient(MilestonesService.class);
+    }
+
+    @Bean
+    public IssueService issueService() {
+
+        final RestClient client = RestClient.builder()
+                .baseUrl(String.format("%s/repos/%s", gitUrl, StringUtils.hasText(owner) ? owner : gitUsername))
+                .defaultHeader("Authorization","Bearer "+ token)
+//                .messageConverters(converterList -> converterList.addFirst(new JsonMessageConverter()))
+                .build();
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory
+                .builderFor(RestClientAdapter.create(client))
+                .build();
+        return factory.createClient(IssueService.class);
     }
 
     @Bean

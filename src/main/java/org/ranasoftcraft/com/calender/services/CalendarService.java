@@ -1,5 +1,6 @@
 package org.ranasoftcraft.com.calender.services;
 
+import org.ranasoftcraft.com.calender.entity.EventComments;
 import org.ranasoftcraft.com.calender.entity.Events;
 import org.ranasoftcraft.com.calender.repository.EventCommentsRepository;
 import org.ranasoftcraft.com.calender.repository.EventsRepository;
@@ -36,4 +37,15 @@ public class CalendarService {
     public Page<Events> getEvents(final Long startDate , final Long endDate) {
        return eventsRepository.findAll(PageRequest.of(0,100));
     }
+
+    public boolean saveEventComments(EventComments eventComments) {
+        eventCommentsRepository.save(eventComments);
+        return Boolean.TRUE;
+    }
+
+    public Page<EventComments> getIssues(String milestoneId) {
+        return eventCommentsRepository.findByEventId(milestoneId, PageRequest.of(0,Integer.MAX_VALUE));
+    }
+
+
 }

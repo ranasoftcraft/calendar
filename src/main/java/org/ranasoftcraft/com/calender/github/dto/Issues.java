@@ -7,7 +7,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Data
-public class Milestones implements Serializable {
+public class Issues implements Serializable {
 
     private String url;
 
@@ -18,10 +18,6 @@ public class Milestones implements Serializable {
     private String title;
 
     private String description;
-
-    private long open_issues;
-
-    private  long closed_issues;
 
     private String state;
 
@@ -35,7 +31,9 @@ public class Milestones implements Serializable {
 
     private String node_id;
 
-    private int number;
+    private Milestones milestone;
+
+    private String body;
 
     public void setCreated_at(String created_at) {
         if(created_at !=null) {

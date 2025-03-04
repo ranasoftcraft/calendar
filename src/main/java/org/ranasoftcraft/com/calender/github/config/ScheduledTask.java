@@ -3,9 +3,11 @@ package org.ranasoftcraft.com.calender.github.config;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ranasoftcraft.com.calender.entity.EventComments;
 import org.ranasoftcraft.com.calender.entity.Events;
 import org.ranasoftcraft.com.calender.github.dto.Milestones;
 import org.ranasoftcraft.com.calender.github.dto.Repository;
+import org.ranasoftcraft.com.calender.github.reader.IssueService;
 import org.ranasoftcraft.com.calender.github.reader.MilestonesService;
 import org.ranasoftcraft.com.calender.github.reader.RepositoryService;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,12 +33,12 @@ public class ScheduledTask {
 
     private final MilestonesService milestonesService;
 
+    private final IssueService issueService;
+
     @Value("${git.owner}")
     private String owner;
 
-
-    @Scheduled(cron = "0 0 0 * * *")
-//    @Scheduled(cron = "0 * * * * *") // every 1 minutes
+    @Scheduled(cron = "${scheduler.cron.expression}")
     public void pullReleases() {
         List<Repository> repositories = Collections.emptyList();
         try { repositories =  repositoryService.getRepository(owner);} catch (Exception e) {
@@ -55,9 +57,24 @@ public class ScheduledTask {
                             .setEventId(m.getNode_id())
                             .setOccurAt(Instant.now().toEpochMilli()));
                     log.info("Synced this {} repo", repository.getName());
+
+
+                    // sync the issues against this milestone
+                    issueService.getIssues(repository.getName(), "all", m.getNumber()).forEach(i -> {
+                        jmsTemplate.convertAndSend("sync-git-issues", new EventComments()
+                                .setComments(i.getBody())
+                                .setEventId(i.getMilestone().getNode_id())
+                                .setOccurAt(i.getCreated_at())
+                                .setTitle(i.getTitle())
+                                .setId(i.getNode_id())
+                                .setDone(i.getState().equals("closed"))
+                                .setOccurAt(Instant.now().toEpochMilli()));
+                    });
+
+
                 }
             } catch (Exception e) {
-                log.warn("This {} repo doesn't have the milestone", repository.getName());
+                log.warn("This {} repo doesn't have the milestone and exception : {}", repository.getName(), e);
             }
 
         }
