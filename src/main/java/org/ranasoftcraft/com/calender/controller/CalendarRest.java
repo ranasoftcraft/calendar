@@ -45,7 +45,7 @@ public class CalendarRest {
         Page<Events> events = calendarService.getEvents(0L,0L);
         return ResponseEntity.ok(events.get().map(m-> {
             return CalendarEvents.builder()
-                    .url("/calendar/issue?milestone="+m.getEventId())
+                    .url("/calendar/issue?milestone="+m.getEventId()+"&text="+m.getTitle())
                     .title(m.getTitle())
                     .start(new Date(m.getCalendarTimestamp()))
                     .allDay(true)

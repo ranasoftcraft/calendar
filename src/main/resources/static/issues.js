@@ -1,10 +1,12 @@
 /**
 *@author sandeep.rana
 */
-//let milestone = 0;
+let milestoneText = '';
 $(document).ready(function() {
     try{
             milestone = new URLSearchParams(window.location.search).get('milestone');
+            milestoneText = new URLSearchParams(window.location.search).get('text');
+            $('#milestoneText').text(milestoneText);
             getIssues(milestone);
     } catch(e){}
 });
