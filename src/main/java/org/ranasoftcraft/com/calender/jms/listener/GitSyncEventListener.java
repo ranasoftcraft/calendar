@@ -2,7 +2,9 @@ package org.ranasoftcraft.com.calender.jms.listener;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.ranasoftcraft.com.calender.entity.EventComments;
 import org.ranasoftcraft.com.calender.entity.Events;
+import org.ranasoftcraft.com.calender.github.reader.IssueService;
 import org.ranasoftcraft.com.calender.services.CalendarService;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,11 @@ public class GitSyncEventListener {
     @JmsListener(destination = "sync-git-milestones", containerFactory = "eventFactory")
     public void listenEvents(Events events) {
         calendarService.save(events);
+    }
+
+    @JmsListener(destination = "sync-git-issues", containerFactory = "eventFactory")
+    public void listenEventsForIssues(EventComments comments) {
+        calendarService.saveEventComments(comments);
     }
 
 }
