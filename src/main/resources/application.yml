@@ -14,3 +14,23 @@ server:
     enabled: true
     min-response-size: 1024
   shutdown: graceful
+
+
+# SMTP Configuration for Zoho Mail
+spring:
+  mail:
+    host: smtp.zoho.in
+    port: 465
+    username: guest
+    password: guest
+    to: sandeep.ranasoftcraft@gmail.com,sandeeprana@ranasoftcraft.co.in
+    from: contact@ranasoftcraft.co.in
+    subject: New client - Hurry upp !!
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+          ssl.enable: true
+          starttls.required: true
+        debug: true
